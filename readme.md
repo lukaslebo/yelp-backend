@@ -1,14 +1,23 @@
-# Yelp Backed
+# Yelp frontend
 
 ## History
-We have recently discovered that Yelp wants to move its current stack to a new one based on Java+Spring and ES6+React, they also want to replace its old fashioned Bootstrap UI framework with supercool UI. 
+So we have recently discovered that Yelp wants to move his current stack to a new one based on Java+Spring and ES6+React, they also want to replace his old fashioned Bootstrap UI framework with a supercool UI. 
 
-For this herculean task they will hire a whole new team, and selection process is starting now.
+For this herculean task they will hire a whole new team and selection process is starting now. A prototype following their wireframes is mandatory for all those that want to participate.
 
 ### Teams
-Here in Propulsion we have presented these three teams. We think that they are compensated in the best way possible. Our goal is that all teams reach almost the same features.
+Here in Propulsion we have presented these three teams. We think that they are compensated in the best possible way. Our goal is that all teams reach almost the same features:
 
-### Stack
+|         |            | 
+| ------------- |:-------------:| 
+| Fabio      | Kim | 
+| Lukas      | Michal      | 
+| Jeremy | Laz      |
+| Jürg | Julya      |
+| Gabriel | Patrick      |
+
+
+### Backend stack
 * Java8
 * Spring Framework
 * H2 but if you are into adventures try to implemented with PostgreSQL
@@ -71,10 +80,18 @@ Paths with auth:
 * `POST: /api/restaurant/:id/review`: Body should have text and rating property.
 
 
+## Development process 
+1. Go to the current milestone.
+2. Assign an issue to yourself.
+3. Solve it.
+4. Create pull request.
+5. Assign your partner to review it.
+
+
 ## Planning
 
-We will use GitHub's [milestones]() and [issues]() to track the progress of your project.
+We will use GitHub's [milestones](https://github.com/Propulsion-Academy/yelp-frontend/milestones) and [issues](https://github.com/Propulsion-Academy/yelp-frontend/issues) to track the progress of your project.
 
 On Friday 17th at 14:00 every group will present their projects.
 
-*** If coding from 9:00 to 18:00 (Monday - Friday)  is not enough time to finish, have in mind that the classroom is open 24/7 🤓 ***
+*** If coding from 9:00 to 18:00 (Monday - Friday)  is not enough time to finish, have in mind that the class is open 24/7 🤓 ***
