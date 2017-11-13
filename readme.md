@@ -1,4 +1,4 @@
-# Yelp frontend
+# Yelp backend
 
 ## History
 So we have recently discovered that Yelp wants to move his current stack to a new one based on Java+Spring and ES6+React, they also want to replace his old fashioned Bootstrap UI framework with a supercool UI. 
