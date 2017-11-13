@@ -48,6 +48,9 @@ public class DefaultUserService implements UserService {
 			return null;
 		}
 		User userFromRepo =  this.userRepository.findById(id);
+		if (userFromRepo == null) {
+			return null;
+		}
 		if (user.getEmail() != null) {
 			userFromRepo.setEmail(user.getEmail());
 		}
