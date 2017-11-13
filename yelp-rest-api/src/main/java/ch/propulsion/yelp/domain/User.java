@@ -44,14 +44,14 @@ public class User {
 	private String lastName;
 	
 	@JsonView( JsonViews.Summary.class )
-	@Column( nullable = false )
+	@Column( unique = true, nullable = false )
 	private String email;
 	
 	@Column( nullable = false )
 	private String password;
 	
 	@JsonView( JsonViews.Detail.class )
-	@OneToMany( mappedBy = "user", cascade = CascadeType.REMOVE )
+	@OneToMany( mappedBy = "user", cascade = CascadeType.ALL )
 	private List<Review> reviews = new ArrayList<>();
 
 	public User(Long id, String firstName, String lastName, String email, String password) {

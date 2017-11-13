@@ -54,7 +54,7 @@ public class Restaurant {
 	private String url;
 	
 	@JsonView( JsonViews.Detail.class )
-	@OneToMany( mappedBy = "restaurant", cascade = CascadeType.REMOVE )
+	@OneToMany( mappedBy = "restaurant", cascade = CascadeType.ALL )
 	private List<Review> reviews = new ArrayList<>();
 
 	public Restaurant(Long id, String name, String address, String email, String phone, String logo, String url) {

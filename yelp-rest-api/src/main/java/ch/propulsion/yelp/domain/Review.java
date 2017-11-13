@@ -8,7 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -45,7 +44,7 @@ public class Review {
 	private LocalDateTime dateCreated = LocalDateTime.now();
 	
 	@JsonView( JsonViews.Summary.class )
-	@OneToOne
+	@ManyToOne
 	private User user;
 	
 	@JsonView( JsonViews.Summary.class )
