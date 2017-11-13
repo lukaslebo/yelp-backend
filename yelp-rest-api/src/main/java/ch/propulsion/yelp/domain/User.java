@@ -14,9 +14,11 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @Entity
@@ -29,6 +31,7 @@ public class User {
 	
 	@Id
 	@GeneratedValue( strategy = GenerationType.AUTO )
+	@Setter( AccessLevel.NONE )
 	@JsonView( JsonViews.Summary.class )
 	private Long id;
 	
