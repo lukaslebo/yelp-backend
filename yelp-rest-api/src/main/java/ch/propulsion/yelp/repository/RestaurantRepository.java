@@ -7,5 +7,8 @@ import ch.propulsion.yelp.domain.Restaurant;
 
 @Repository
 public interface RestaurantRepository extends JpaRepository<Restaurant, Long>{
-
+	
+	Restaurant findById(Long id);
+	void deleteById(Long id);
+	
 }

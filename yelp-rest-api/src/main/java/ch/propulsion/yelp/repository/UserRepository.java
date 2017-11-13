@@ -7,5 +7,9 @@ import ch.propulsion.yelp.domain.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>{
-
+	
+	User findById(Long id);
+	User findByEmail(String email);
+	void deleteById(Long id);
+	
 }
