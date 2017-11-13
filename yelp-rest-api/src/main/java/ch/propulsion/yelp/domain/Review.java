@@ -52,16 +52,17 @@ public class Review {
 	@ManyToOne
 	private Restaurant restaurant;
 
-	public Review(Long id, String text, Integer rating, User user, Restaurant restaurant) {
+	public Review(Long id, String text, Integer rating, User user, Restaurant restaurant, LocalDateTime dateCreated) {
 		this.id = id;
 		this.text = text;
 		this.rating = rating;
 		this.user = user;
 		this.restaurant = restaurant;
+		this.dateCreated = dateCreated;
 	}
 	
 	public Review(String text, Integer rating, User user, Restaurant restaurant) {
-		this(null, text, rating, user, restaurant);
+		this(null, text, rating, user, restaurant, LocalDateTime.now());
 	}
 	
 }
