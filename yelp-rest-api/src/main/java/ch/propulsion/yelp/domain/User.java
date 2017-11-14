@@ -27,10 +27,21 @@ import lombok.ToString;
 @NoArgsConstructor
 @EqualsAndHashCode( exclude = { "id" } )
 @ToString( exclude = { "password" } )
-public class User {
+@Component
+public class User implements UserDetails {
+	
+	private static final long serialVersionUID = 2365563617740595474L;
+	
+	private static RoleRepository roleRepository;
+
+	@Autowired
+	public void setRoleRepository(RoleRepository roleRepository) {
+		User.roleRepository = roleRepository;
+	}
 	
 	@Id
-	@GeneratedValue( strategy = GenerationType.AUTO )
+	@GeneratedValue( strategy = GenerationType.SEQUENCE, generator = "user_seq" )
+	@SequenceGenerator(name = "user_seq", sequenceName = "user_seq", allocationSize = 25)
 	@Setter( AccessLevel.NONE )
 	@JsonView( JsonViews.Summary.class )
 	private Long id;

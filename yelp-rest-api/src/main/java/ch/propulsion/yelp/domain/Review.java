@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -26,7 +27,8 @@ import lombok.Setter;
 public class Review {
 	
 	@Id
-	@GeneratedValue( strategy = GenerationType.AUTO )
+	@GeneratedValue( strategy = GenerationType.SEQUENCE, generator = "review_seq" )
+	@SequenceGenerator(name = "review_seq", sequenceName = "review_seq", allocationSize = 25)
 	@Setter( AccessLevel.NONE )
 	@JsonView( JsonViews.Summary.class )
 	private Long id;

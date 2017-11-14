@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -28,7 +29,8 @@ import lombok.Setter;
 public class Restaurant {
 	
 	@Id
-	@GeneratedValue( strategy = GenerationType.AUTO )
+	@GeneratedValue( strategy = GenerationType.SEQUENCE, generator = "restaurant_seq" )
+	@SequenceGenerator(name = "restaurant_seq", sequenceName = "restaurant_seq", allocationSize = 25)
 	@Setter( AccessLevel.NONE )
 	@JsonView( JsonViews.Summary.class )
 	private Long id;
