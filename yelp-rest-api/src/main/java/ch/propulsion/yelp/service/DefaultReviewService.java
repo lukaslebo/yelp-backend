@@ -2,6 +2,8 @@ package ch.propulsion.yelp.service;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,6 +11,7 @@ import ch.propulsion.yelp.domain.Review;
 import ch.propulsion.yelp.repository.ReviewRepository;
 
 @Service
+@Transactional
 public class DefaultReviewService implements ReviewService {
 	
 	private final ReviewRepository reviewRepository;

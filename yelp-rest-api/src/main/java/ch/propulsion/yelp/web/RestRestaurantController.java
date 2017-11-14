@@ -23,7 +23,7 @@ import ch.propulsion.yelp.service.RestaurantService;
 import ch.propulsion.yelp.service.ReviewService;
 
 @RestController
-@RequestMapping( "/api/restaurant" ) 
+@RequestMapping( "/api" ) 
 public class RestRestaurantController {
 	
 	private final RestaurantService restaurantService;
