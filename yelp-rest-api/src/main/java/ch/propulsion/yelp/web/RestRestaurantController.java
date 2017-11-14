@@ -35,16 +35,22 @@ public class RestRestaurantController {
 		this.reviewService = reviewService;
 	}
 	
-	@GetMapping( "s" )
+	@GetMapping( "/restaurants" )
 	@JsonView( JsonViews.Summary.class )
 	public List<Restaurant> getAllRestaurants() {
 		return this.restaurantService.findAll();
 	}
 	
-	@GetMapping( "s/{id}" )
+	@GetMapping( "/restaurants/{id}" )
 	@JsonView( JsonViews.Summary.class )
 	public Restaurant getRestaurant(@PathVariable Long id) {
 		return this.restaurantService.findById(id);
+	}
+	
+	@GetMapping( "/restaurants/search?={name}" )
+	@JsonView( JsonViews.Summary.class )
+	public List<Restaurant> searchRestaurants(@PathVariable String name) {
+		return this.restaurantService.findByNameIgnoreCaseContaining(name);
 	}
 	
 	@PostMapping( "/restaurant/{restaurantId}/review" ) 
