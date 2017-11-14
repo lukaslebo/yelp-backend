@@ -5,6 +5,14 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mobile.device.Device;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,17 +27,26 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import ch.propulsion.yelp.domain.JsonViews;
 import ch.propulsion.yelp.domain.User;
+import ch.propulsion.yelp.security.JwtUtil;
+import ch.propulsion.yelp.security.service.JwtAuthenticationResponse;
 import ch.propulsion.yelp.service.UserService;
 
 @RestController
 @RequestMapping( "/api/users" )
 public class RestUserController {
 	
+//	private final String tokenHeader = "Authorization";
 	private final UserService userService;
+	private final UserDetailsService userDetailsService;
+    private final JwtUtil jwtUtil;
+    private final AuthenticationManager authenticationManager;
 	
 	@Autowired
-	public RestUserController(UserService userService) {
+	public RestUserController(UserService userService, UserDetailsService userDetailsService, JwtUtil jwtUtil, AuthenticationManager authenticationManager) {
 		this.userService = userService;
+		this.userDetailsService = userDetailsService;
+		this.jwtUtil = jwtUtil;
+		this.authenticationManager = authenticationManager;
 	}
 	
 	@GetMapping
@@ -71,9 +88,31 @@ public class RestUserController {
 	
 	@DeleteMapping( "/{id}" )
 	@ResponseStatus( value = HttpStatus.NO_CONTENT )
-	@JsonView( JsonViews.Detail.class )
 	public void deleteUser(@PathVariable Long id) {
 		this.userService.deleteUserById(id);
 	}
+	
+	
+	@PostMapping( "/sign_in" )
+	public ResponseEntity<?> login(@RequestBody Map<String, String> json, Device device) {
+		String email = json.get("email");
+		String password = json.get("password");
+		System.out.println("login attempt with email: " + email);
+		System.out.println("and password: " + password);
+		// Perform the security
+        final Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(email, password)
+        );
+        System.out.println(authentication);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        
+        // Reload password post-security so we can generate token
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+        final String token = jwtUtil.generateToken(userDetails, device);
+
+        // Return the token
+        return ResponseEntity.ok(new JwtAuthenticationResponse(token));
+	}
+	
 	
 }
