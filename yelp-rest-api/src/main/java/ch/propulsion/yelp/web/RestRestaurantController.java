@@ -3,6 +3,8 @@ package ch.propulsion.yelp.web;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,70 +21,98 @@ import ch.propulsion.yelp.domain.JsonViews;
 import ch.propulsion.yelp.domain.Restaurant;
 import ch.propulsion.yelp.domain.Review;
 import ch.propulsion.yelp.domain.User;
+import ch.propulsion.yelp.security.JwtUtil;
 import ch.propulsion.yelp.service.RestaurantService;
 import ch.propulsion.yelp.service.ReviewService;
+import ch.propulsion.yelp.service.UserService;
 
 @RestController
 @RequestMapping( "/api" ) 
 public class RestRestaurantController {
 	
+	private final static String tokenHeader = "Authorization";
 	private final RestaurantService restaurantService;
 	private final ReviewService reviewService;
+	private final UserService userService;
+	private final JwtUtil jwtUtil;
 	
 	@Autowired
-	public RestRestaurantController(RestaurantService restaurantService, ReviewService reviewService) {
+	public RestRestaurantController(RestaurantService restaurantService, ReviewService reviewService, UserService userService, JwtUtil jwtUtil) {
 		this.restaurantService = restaurantService;
 		this.reviewService = reviewService;
+		this.userService = userService;
+		this.jwtUtil = jwtUtil;
+	}
+	
+	private boolean isAuthenticated(HttpServletRequest request, String id) {
+		String token = request.getHeader(tokenHeader).substring(7);
+        String username = jwtUtil.getUsernameFromToken(token);
+        User user = this.userService.findByUserName(username);
+        if (user.getId().equals(id)) {
+        		return true;
+        }
+        return false;
 	}
 	
 	@GetMapping( "/restaurants" )
-	@JsonView( JsonViews.Summary.class )
+	@JsonView( JsonViews.ReviewListInRestaurant.class )
 	public List<Restaurant> getAllRestaurants() {
 		return this.restaurantService.findAll();
 	}
 	
 	@GetMapping( "/restaurants/{id}" )
-	@JsonView( JsonViews.Summary.class )
-	public Restaurant getRestaurant(@PathVariable Long id) {
+	@JsonView( JsonViews.ReviewListInRestaurant.class )
+	public Restaurant getRestaurant(@PathVariable String id) {
 		return this.restaurantService.findById(id);
 	}
 	
 	@GetMapping( "/restaurants/search?={name}" )
-	@JsonView( JsonViews.Summary.class )
+	@JsonView( JsonViews.ReviewListInRestaurant.class )
 	public List<Restaurant> searchRestaurants(@PathVariable String name) {
 		return this.restaurantService.findByNameIgnoreCaseContaining(name);
 	}
 	
 	@PostMapping( "/restaurant/{restaurantId}/review" ) 
-	@JsonView( JsonViews.Summary.class )
-	public Review postReview(@RequestBody Map<String, String> json, @PathVariable Long restaurantId) {
+	@JsonView( JsonViews.ReviewListInRestaurant.class )
+	public Review postReview(@RequestBody Map<String, String> json, @PathVariable String restaurantId, HttpServletRequest request) {
 		String text = json.get("text");
 		Integer rating = Integer.parseInt(json.get("rating"));
-		User user = new User();
+		String token = request.getHeader(tokenHeader).substring(7);
+        String username = jwtUtil.getUsernameFromToken(token);
+        User user = this.userService.findByUserName(username);
 		Restaurant restaurant = this.restaurantService.findById(restaurantId);
 		Review review = new Review(text, rating, user, restaurant);
-		return this.reviewService.saveReview(review);
+		Review savedReview = this.reviewService.saveReview(review);
+		review.getUser().addReview(savedReview);
+		review.getRestaurant().addReview(savedReview);
+		return savedReview;
 	}
 	
 	@PutMapping( "/restaurant/{restaurantId}/review/{reviewId}" )
-	@JsonView( JsonViews.Summary.class )
-	public Review updateReview(@RequestBody Map<String, String> json, @PathVariable Long restaurantId, @PathVariable Long reviewId) {
+	@JsonView( JsonViews.ReviewListInRestaurant.class )
+	public Review updateReview(@RequestBody Map<String, String> json, @PathVariable String restaurantId, @PathVariable String reviewId, HttpServletRequest request) {
 		Review reviewFromRepo = this.reviewService.findByID(reviewId);
 		String text = json.get("text");
 		Integer rating = Integer.parseInt(json.get("rating"));
-		if (text != null) {
-			reviewFromRepo.setText(text);
-		}
-		if (rating != null) {
-			reviewFromRepo.setRating(rating);
-		}
-		return this.reviewService.findByID(reviewId);
+		String id = reviewFromRepo.getUser().getId();
+		if (isAuthenticated(request, id)) {
+			if (text != null) {
+				reviewFromRepo.setText(text);
+			}
+			if (rating != null) {
+				reviewFromRepo.setRating(rating);
+			}
+			return this.reviewService.findByID(reviewId);
+        }
+		return null;
 	}
 	
 	@DeleteMapping( "/restaurant/{restaurantId}/review/{reviewId}" )
-	@JsonView( JsonViews.Summary.class )
-	public void deleteReview(@PathVariable Long restaurantId, @PathVariable Long reviewId) {
-		this.reviewService.deleteReviewById(reviewId);
+	public void deleteReview(@PathVariable String restaurantId, @PathVariable String reviewId, HttpServletRequest request) {
+		String id = this.reviewService.findByID(restaurantId).getUser().getId();
+		if (isAuthenticated(request, id)) {
+			this.reviewService.deleteReviewById(reviewId);
+        }
 	}
 	
 }
