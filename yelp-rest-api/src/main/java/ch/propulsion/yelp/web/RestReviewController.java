@@ -26,14 +26,14 @@ public class RestReviewController {
 	}
 	
 	@GetMapping
-	@JsonView( JsonViews.Summary.class )
+	@JsonView( JsonViews.ReviewDetails.class )
 	public List<Review> getAllReviews() {
 		return this.reviewService.findAll();
 	}
 	
 	@GetMapping( "/{id}" )
-	@JsonView( JsonViews.Summary.class )
-	public Review getReview(@PathVariable Long id) {
+	@JsonView( JsonViews.ReviewDetails.class )
+	public Review getReview(@PathVariable String id) {
 		return this.reviewService.findByID(id);
 	}
 	

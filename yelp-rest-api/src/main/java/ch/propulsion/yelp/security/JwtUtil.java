@@ -30,7 +30,7 @@ public class JwtUtil implements Serializable {
     static final String AUDIENCE_TABLET = "tablet";
 
     // @Value("${jwt.secret}")
-    private String secret = "$4e?$2-creamysausage-*$";
+    private String secret = "$4e?$2-creamysausage-*$+";
 
     // @Value("${jwt.expiration}")
     private Long expiration = 604_800L;

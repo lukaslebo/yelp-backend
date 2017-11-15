@@ -29,11 +29,9 @@ import lombok.Setter;
 public class Restaurant {
 	
 	@Id
-	@GeneratedValue( strategy = GenerationType.SEQUENCE, generator = "restaurant_seq" )
-	@SequenceGenerator(name = "restaurant_seq", sequenceName = "restaurant_seq", allocationSize = 25)
-	@Setter( AccessLevel.NONE )
+	@Setter( AccessLevel.PRIVATE )
 	@JsonView( JsonViews.Summary.class )
-	private Long id;
+	private String id;
 	
 	@JsonView( JsonViews.Summary.class )
 	@Column( nullable = false )

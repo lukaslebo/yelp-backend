@@ -35,7 +35,7 @@ import ch.propulsion.yelp.service.UserService;
 @RequestMapping( "/api/users" )
 public class RestUserController {
 	
-//	private final String tokenHeader = "Authorization";
+	private final String tokenHeader = "Authorization";
 	private final UserService userService;
 	private final UserDetailsService userDetailsService;
     private final JwtUtil jwtUtil;
@@ -76,20 +76,25 @@ public class RestUserController {
 	}
 	
 	@PutMapping( "/{id}" )
-	@JsonView( JsonViews.Detail.class )
-	public User updateUser(@RequestBody Map<String, String> json, @PathVariable Long id) {
+	@JsonView( JsonViews.ReviewListInUser.class )
+	public User updateUser(@RequestBody Map<String, String> json, @PathVariable String id, HttpServletRequest request) {
 		String firstName = json.get("firstName");
 		String lastName = json.get("lastName");
 		String email = json.get("email");
 		String password = json.get("password");
 		User user = new User(id, firstName, lastName, email, password);
-		return this.userService.updateUser(user);
+		if (isAuthenticated(request, id)) {
+			return this.userService.updateUser(user);
+        }
+		return null;
 	}
 	
 	@DeleteMapping( "/{id}" )
 	@ResponseStatus( value = HttpStatus.NO_CONTENT )
-	public void deleteUser(@PathVariable Long id) {
-		this.userService.deleteUserById(id);
+	public void deleteUser(@PathVariable String id, HttpServletRequest request) {
+        if (isAuthenticated(request, id)) {
+        		this.userService.deleteUserById(id);        	
+        }
 	}
 	
 	
