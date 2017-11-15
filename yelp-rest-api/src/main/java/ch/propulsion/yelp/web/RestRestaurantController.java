@@ -48,9 +48,11 @@ public class RestRestaurantController {
 		String token = request.getHeader(tokenHeader).substring(7);
         String username = jwtUtil.getUsernameFromToken(token);
         User user = this.userService.findByUserName(username);
+        System.err.println("in da isauthenticated");
         if (user.getId().equals(id)) {
         		return true;
         }
+        System.err.println("but returning false");
         return false;
 	}
 	
@@ -82,10 +84,7 @@ public class RestRestaurantController {
         User user = this.userService.findByUserName(username);
 		Restaurant restaurant = this.restaurantService.findById(restaurantId);
 		Review review = new Review(text, rating, user, restaurant);
-		Review savedReview = this.reviewService.saveReview(review);
-		review.getUser().addReview(savedReview);
-		review.getRestaurant().addReview(savedReview);
-		return savedReview;
+		return this.reviewService.saveReview(review);
 	}
 	
 	@PutMapping( "/restaurant/{restaurantId}/review/{reviewId}" )
@@ -109,8 +108,10 @@ public class RestRestaurantController {
 	
 	@DeleteMapping( "/restaurant/{restaurantId}/review/{reviewId}" )
 	public void deleteReview(@PathVariable String restaurantId, @PathVariable String reviewId, HttpServletRequest request) {
-		String id = this.reviewService.findByID(restaurantId).getUser().getId();
+		String id = this.reviewService.findByID(reviewId).getUser().getId();
+		System.err.println("calling delete review");
 		if (isAuthenticated(request, id)) {
+			System.err.println("authenticated delete");
 			this.reviewService.deleteReviewById(reviewId);
         }
 	}

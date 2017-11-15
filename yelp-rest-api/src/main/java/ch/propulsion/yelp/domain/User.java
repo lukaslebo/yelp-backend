@@ -106,6 +106,17 @@ public class User implements UserDetails {
 		this.roles.add(role);
 	}
 	
+	public void removeReview(Review review) {
+		int index = this.reviews.indexOf(review);
+		if ( index != -1 ) {
+			this.reviews.remove(index);			
+		}
+	}
+	
+	public void removeRole(Role role) {
+		this.roles.remove(role);
+	}
+	
 	@PrePersist
 	public void onCreate() {
 		String uuid = UUID.randomUUID().toString();

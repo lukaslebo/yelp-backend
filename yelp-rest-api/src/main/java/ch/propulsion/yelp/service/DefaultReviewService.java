@@ -23,7 +23,10 @@ public class DefaultReviewService implements ReviewService {
 	
 	@Override
 	public Review saveReview(Review review) {
-		return this.reviewRepository.save(review);
+		Review savedReview =  this.reviewRepository.save(review);
+		review.getUser().addReview(savedReview);
+		review.getRestaurant().addReview(savedReview);
+		return savedReview;
 	}
 
 	@Override
@@ -51,6 +54,9 @@ public class DefaultReviewService implements ReviewService {
 
 	@Override
 	public void deleteReviewById(String id) {
+		Review review = this.reviewRepository.findById(id);
+		review.getUser().removeReview(review);
+		review.getRestaurant().removeReview(review);
 		this.reviewRepository.deleteById(id);
 	}
 

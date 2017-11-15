@@ -75,6 +75,13 @@ public class Restaurant {
 		this.reviews.add(review);
 	}
 	
+	public void removeReview(Review review) {
+		int index = this.reviews.indexOf(review);
+		if ( index != -1 ) {
+			this.reviews.remove(index);			
+		}
+	}
+	
 	@PrePersist
 	public void onCreate() {
 		String uuid = UUID.randomUUID().toString();

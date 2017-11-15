@@ -17,12 +17,14 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table( name = "reviews" )
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode( exclude = { "id" } )
+@ToString( exclude = { "user", "restaurant" } )
 public class Review {
 	
 	@Id
