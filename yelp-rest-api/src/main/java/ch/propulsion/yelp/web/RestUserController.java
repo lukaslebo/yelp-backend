@@ -51,20 +51,31 @@ public class RestUserController {
 		this.authenticationManager = authenticationManager;
 	}
 	
+	private boolean isAuthenticated(HttpServletRequest request, String id) {
+		String token = request.getHeader(tokenHeader).substring(7);
+        String username = jwtUtil.getUsernameFromToken(token);
+        User user = this.userService.findByUserName(username);
+        System.err.println("evaluating authentication ... id of token is " + user.getId());
+        if (user.getId().equals(id)) {
+        		return true;
+        }
+        return false;
+	}
+	
 	@GetMapping
-	@JsonView( JsonViews.Summary.class )
+	@JsonView( JsonViews.ReviewListInUser.class )
 	public List<User> getAllUsers() {
 		return this.userService.findAll();
 	}
 	
 	@GetMapping( "/{id}" )
-	@JsonView( JsonViews.Detail.class )
-	public User getUser(@PathVariable Long id) {
+	@JsonView( JsonViews.ReviewListInUser.class )
+	public User getUser(@PathVariable String id) {
 		return this.userService.findById(id);
 	}
 	
 	@PostMapping( "/sign_up" )
-	@JsonView( JsonViews.Detail.class )
+	@JsonView( JsonViews.ReviewListInUser.class )
 	public User createUser(@RequestBody Map<String, String> json) {
 		String firstName = json.get("firstName");
 		String lastName = json.get("lastName");
