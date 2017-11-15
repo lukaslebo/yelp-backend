@@ -6,19 +6,18 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,11 +55,9 @@ public class User implements UserDetails {
 	}
 	
 	@Id
-	@GeneratedValue( strategy = GenerationType.SEQUENCE, generator = "user_seq" )
-	@SequenceGenerator(name = "user_seq", sequenceName = "user_seq", allocationSize = 25)
-	@Setter( AccessLevel.NONE )
+	@Setter( AccessLevel.PRIVATE )
 	@JsonView( JsonViews.Summary.class )
-	private Long id;
+	private String id;
 	
 	@JsonView( JsonViews.Summary.class )
 	@Column( name = "first_name", nullable = false, length = 50 )
@@ -79,15 +76,15 @@ public class User implements UserDetails {
 	@Column( nullable = false, length = 100 )
 	private String password;
 	
-	@JsonView( JsonViews.Detail.class )
-	@OneToMany( mappedBy = "user", cascade = CascadeType.ALL )
+	@JsonView( JsonViews.ReviewListInUser.class )
+	@OneToMany( mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER )
 	private List<Review> reviews = new ArrayList<>();
 	
 	@ManyToMany( fetch = FetchType.EAGER )
-	@JoinTable( name = "user_roles" ) // , joinColumns = {@JoinColumn( name = "user_id", referencedColumnName = "id" )}, inverseJoinColumns = {@JoinColumn( name = "access_level_id", referencedColumnName = "id" )}
+	@JoinTable( name = "user_roles" )
 	private Set<Role> roles = new HashSet<>();
 
-	public User(Long id, String firstName, String lastName, String email, String password) {
+	public User(String id, String firstName, String lastName, String email, String password) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -99,6 +96,20 @@ public class User implements UserDetails {
 	
 	public User(String firstName, String lastName, String email, String password) {
 		this(null, firstName, lastName, email, password);
+	}
+	
+	public void addReview(Review review) {
+		this.reviews.add(review);
+	}
+	
+	public void addRole(Role role) {
+		this.roles.add(role);
+	}
+	
+	@PrePersist
+	public void onCreate() {
+		String uuid = UUID.randomUUID().toString();
+		setId(uuid);
 	}
 	
 	// -- Spring Security: UserDetails -----------------------------------------
@@ -132,6 +143,7 @@ public class User implements UserDetails {
 
 	@Override
 	public boolean isEnabled() {
+		// We don't have a property to enable/disable the user - always return true
 		return true;
 	}
 	

@@ -22,7 +22,7 @@ public class DefaultRestaurantService implements RestaurantService {
 	}
 	
 	@Override
-	public Restaurant findById(Long id) {
+	public Restaurant findById(String id) {
 		return this.restaurantRepository.findById(id);
 	}
 

@@ -10,9 +10,9 @@ import ch.propulsion.yelp.domain.Restaurant;
 @Repository
 public interface RestaurantRepository extends JpaRepository<Restaurant, Long>{
 	
-	Restaurant findById(Long id);
+	Restaurant findById(String id);
 	List<Restaurant> findByName(String name);
 	List<Restaurant> findByNameIgnoreCaseContaining(String name);
-	void deleteById(Long id);
+	void deleteById(String id);
 	
 }

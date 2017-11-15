@@ -15,19 +15,23 @@ import ch.propulsion.yelp.repository.UserRepository;
 public class DefaultUserService implements UserService {
 	
 	private final UserRepository userRepository;
+	private final BCryptPasswordEncoder bcrypt;
 	
 	@Autowired
-	public DefaultUserService(UserRepository userRepository) {
+	public DefaultUserService(UserRepository userRepository, BCryptPasswordEncoder bcrypt) {
 		this.userRepository = userRepository;
+		this.bcrypt = bcrypt;
 	}
 	
 	@Override
 	public User save(User user) {
+		String password = user.getPassword();
+		user.setPassword(bcrypt.encode(password));
 		return this.userRepository.save(user);
 	}
 
 	@Override
-	public User findById(Long id) {
+	public User findById(String id) {
 		return this.userRepository.findById(id);
 	}
 
@@ -40,10 +44,15 @@ public class DefaultUserService implements UserService {
 	public User findByEmail(String email) {
 		return this.userRepository.findByEmail(email);
 	}
+	
+	@Override
+	public User findByUserName(String username) {
+		return this.userRepository.findByUsername(username);
+	}
 
 	@Override
 	public User updateUser(User user) {
-		Long id = user.getId();
+		String id = user.getId();
 		if (id == null) {
 			return null;
 		}
@@ -67,7 +76,7 @@ public class DefaultUserService implements UserService {
 	}
 
 	@Override
-	public void deleteUserById(Long id) {
+	public void deleteUserById(String id) {
 		this.userRepository.deleteById(id);
 	}
 

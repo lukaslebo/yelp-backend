@@ -27,7 +27,7 @@ public class DefaultReviewService implements ReviewService {
 	}
 
 	@Override
-	public Review findByID(Long id) {
+	public Review findByID(String id) {
 		return this.reviewRepository.findById(id);
 	}
 
@@ -38,7 +38,7 @@ public class DefaultReviewService implements ReviewService {
 
 	@Override
 	public Review updateReview(Review review) {
-		Long id = review.getId();
+		String id = review.getId();
 		if (id == null) {
 			return null;
 		}
@@ -50,7 +50,7 @@ public class DefaultReviewService implements ReviewService {
 	}
 
 	@Override
-	public void deleteReviewById(Long id) {
+	public void deleteReviewById(String id) {
 		this.reviewRepository.deleteById(id);
 	}
 

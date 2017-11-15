@@ -2,15 +2,15 @@ package ch.propulsion.yelp.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -55,11 +55,11 @@ public class Restaurant {
 	@Column( nullable = false )
 	private String url;
 	
-	@JsonView( JsonViews.Detail.class )
-	@OneToMany( mappedBy = "restaurant", cascade = CascadeType.ALL )
+	@JsonView( JsonViews.ReviewListInRestaurant.class )
+	@OneToMany( mappedBy = "restaurant", cascade = CascadeType.ALL, fetch = FetchType.EAGER )
 	private List<Review> reviews = new ArrayList<>();
 
-	public Restaurant(Long id, String name, String address, String email, String phone, String logo, String url) {
+	public Restaurant(String id, String name, String address, String email, String phone, String logo, String url) {
 		this.id = id;
 		this.name = name;
 		this.address = address;
@@ -75,6 +75,12 @@ public class Restaurant {
 	
 	public void addReview(Review review) {
 		this.reviews.add(review);
+	}
+	
+	@PrePersist
+	public void onCreate() {
+		String uuid = UUID.randomUUID().toString();
+		setId(uuid);
 	}
 
 }

@@ -7,10 +7,11 @@ import ch.propulsion.yelp.domain.User;
 public interface UserService {
 	
 	User save(User user);
-	User findById(Long id);
+	User findById(String id);
 	List<User> findAll();
 	User findByEmail(String email);
+	User findByUserName(String username);
 	User updateUser(User user);
-	void deleteUserById(Long id);
+	void deleteUserById(String id);
 
 }

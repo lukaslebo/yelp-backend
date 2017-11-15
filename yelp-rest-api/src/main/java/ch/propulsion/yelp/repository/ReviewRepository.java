@@ -10,8 +10,8 @@ import ch.propulsion.yelp.domain.Review;
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long>{
 	
-	Review findById(Long id);
+	Review findById(String id);
 	List<Review> findByRating(Integer rating);
-	void deleteById(Long id);
+	void deleteById(String id);
 	
 }

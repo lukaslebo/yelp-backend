@@ -7,9 +7,9 @@ import ch.propulsion.yelp.domain.Review;
 public interface ReviewService {
 	
 	Review saveReview(Review review);
-	Review findByID(Long id);
+	Review findByID(String id);
 	List<Review> findAll();
 	Review updateReview(Review review);
-	void deleteReviewById(Long id);
+	void deleteReviewById(String id);
 	
 }

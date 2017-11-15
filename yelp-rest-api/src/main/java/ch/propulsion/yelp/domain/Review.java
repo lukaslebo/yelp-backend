@@ -1,14 +1,13 @@
 package ch.propulsion.yelp.domain;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -27,11 +26,9 @@ import lombok.Setter;
 public class Review {
 	
 	@Id
-	@GeneratedValue( strategy = GenerationType.SEQUENCE, generator = "review_seq" )
-	@SequenceGenerator(name = "review_seq", sequenceName = "review_seq", allocationSize = 25)
-	@Setter( AccessLevel.NONE )
+	@Setter( AccessLevel.PRIVATE )
 	@JsonView( JsonViews.Summary.class )
-	private Long id;
+	private String id;
 	
 	@JsonView( JsonViews.Summary.class )
 	@Column( nullable = false )
@@ -45,15 +42,15 @@ public class Review {
 	@Column( name = "date_created", updatable = false, nullable = false )
 	private LocalDateTime dateCreated = LocalDateTime.now();
 	
-	@JsonView( JsonViews.Summary.class )
+	@JsonView( value = {JsonViews.ReviewListInRestaurant.class, JsonViews.ReviewDetails.class} )
 	@ManyToOne
 	private User user;
 	
-	@JsonView( JsonViews.Summary.class )
+	@JsonView( value = {JsonViews.ReviewListInUser.class, JsonViews.ReviewDetails.class} )
 	@ManyToOne
 	private Restaurant restaurant;
 
-	public Review(Long id, String text, Integer rating, User user, Restaurant restaurant, LocalDateTime dateCreated) {
+	public Review(String id, String text, Integer rating, User user, Restaurant restaurant, LocalDateTime dateCreated) {
 		this.id = id;
 		this.text = text;
 		this.rating = rating;
@@ -64,6 +61,12 @@ public class Review {
 	
 	public Review(String text, Integer rating, User user, Restaurant restaurant) {
 		this(null, text, rating, user, restaurant, LocalDateTime.now());
+	}
+	
+	@PrePersist
+	public void onCreate() {
+		String uuid = UUID.randomUUID().toString();
+		setId(uuid);
 	}
 	
 }

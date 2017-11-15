@@ -1,11 +1,11 @@
 package ch.propulsion.yelp.domain;
 
+import java.util.UUID;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 import lombok.Data;
@@ -23,11 +23,23 @@ public class Role {
 	public static final String ROLE_ADMIN = "ROLE_ADMIN";
 
 	@Id
-	@GeneratedValue( strategy = GenerationType.SEQUENCE, generator = "role_seq" )
-	@SequenceGenerator(name = "role_seq", sequenceName = "role_seq", allocationSize = 25)
-	private Long id;
+	private String id;
 
 	@Column( unique = true, nullable = false, length = 50 )
 	private String name;
-
+	
+	public Role(String id, String name) {
+		this.id = id;
+		this.name = name;
+	}
+	public Role(String name) {
+		this(null, name);
+	}
+	
+	@PrePersist
+	public void onCreate() {
+		String uuid = UUID.randomUUID().toString();
+		setId(uuid);
+	}
+	
 }

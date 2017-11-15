@@ -6,7 +6,15 @@ public interface JsonViews {
 		
 	}
 	
-	interface Detail extends Summary {
+	interface ReviewListInUser extends Summary {
+		
+	}
+	
+	interface ReviewListInRestaurant extends Summary {
+		
+	}
+	
+	interface ReviewDetails extends Summary {
 		
 	}
 	
