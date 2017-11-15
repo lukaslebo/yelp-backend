@@ -76,6 +76,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	        // don't create session
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
             
+//            .authorizeRequests()
+//	            .antMatchers(HttpMethod.OPTIONS,"/**").permitAll()//allow CORS option calls
+//	            .antMatchers("/resources/**").permitAll()
+//	            .anyRequest().authenticated()
+//	            .and()
+            
+            .mvcMatcher("/**")
+	            .authorizeRequests()
+					.mvcMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+					.and()
+            
             .mvcMatcher("/api/users/**")
 				.authorizeRequests()
 					.mvcMatchers(HttpMethod.POST, "/api/users/sign_in").permitAll()
@@ -101,6 +112,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 					.and()
 
 			.authorizeRequests()
+			.antMatchers(HttpMethod.OPTIONS, "/", "/**").permitAll()
 			.antMatchers(
 	                    HttpMethod.GET,
 	                    "/",
