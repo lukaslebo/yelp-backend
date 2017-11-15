@@ -49,7 +49,7 @@ public class DataBaseLoader implements ApplicationRunner {
 		User[] userArr = new User[6];
 		userArr[0] = new User("Lukas", "Lebovitz", "fake11@mail.com", "password11");
 		userArr[1] = new User("Michal", "Michal Zurczak", "fake8@mail.com", "password8");
-		userArr[2] = new User("Jeremy", "Savor", "fake4@mail.com", "password8");
+		userArr[2] = new User("Jeremy", "Savor", "fake4@mail.com", "password4");
 		userArr[3] = new User("Kim", "Beyeler", "fake7@mail.com", "password7");
 		userArr[4] = new User("Fabio", "Wanner", "fake2@mail.com", "password2");
 		userArr[5] = new User("Laurent", "Hoxhaj", "fake16@mail.com", "password16");
