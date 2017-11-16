@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import ch.propulsion.yelp.domain.User;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long>{
+public interface UserRepository extends JpaRepository<User, String>{
 	
 	User findById(String id);
 	User findByEmail(String email);

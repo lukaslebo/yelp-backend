@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import ch.propulsion.yelp.domain.Review;
 
 @Repository
-public interface ReviewRepository extends JpaRepository<Review, Long>{
+public interface ReviewRepository extends JpaRepository<Review, String>{
 	
 	Review findById(String id);
 	List<Review> findByRating(Integer rating);

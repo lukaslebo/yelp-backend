@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import ch.propulsion.yelp.domain.Restaurant;
 
 @Repository
-public interface RestaurantRepository extends JpaRepository<Restaurant, Long>{
+public interface RestaurantRepository extends JpaRepository<Restaurant, String>{
 	
 	Restaurant findById(String id);
 	List<Restaurant> findByName(String name);
