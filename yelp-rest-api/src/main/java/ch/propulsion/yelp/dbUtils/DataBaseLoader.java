@@ -39,15 +39,16 @@ public class DataBaseLoader implements ApplicationRunner {
 		Role ROLE_USER = new Role(Role.ROLE_USER);
 		Role ROLE_ADMIN = new Role(Role.ROLE_ADMIN);
 		if ( null == roleRepository.findByName(ROLE_USER.getName()) ) {
-			roleRepository.save(ROLE_USER);			
+			ROLE_USER = roleRepository.save(ROLE_USER);			
 		}
 		if ( null == roleRepository.findByName(ROLE_ADMIN.getName()) ) {
-			roleRepository.save(ROLE_ADMIN);
+			ROLE_ADMIN = roleRepository.save(ROLE_ADMIN);
 		}
 		
 
 		User[] userArr = new User[6];
 		userArr[0] = new User("Lukas", "Lebovitz", "fake11@mail.com", "password11");
+		userArr[0].addRole(ROLE_ADMIN);
 		userArr[1] = new User("Michal", "Michal Zurczak", "fake8@mail.com", "password8");
 		userArr[2] = new User("Jeremy", "Savor", "fake4@mail.com", "password4");
 		userArr[3] = new User("Kim", "Beyeler", "fake7@mail.com", "password7");
