@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -48,11 +49,9 @@ public class RestRestaurantController {
 		String token = request.getHeader(tokenHeader).substring(7);
         String username = jwtUtil.getUsernameFromToken(token);
         User user = this.userService.findByUserName(username);
-        System.err.println("in da isauthenticated");
         if (user.getId().equals(id)) {
         		return true;
         }
-        System.err.println("but returning false");
         return false;
 	}
 	
@@ -68,9 +67,9 @@ public class RestRestaurantController {
 		return this.restaurantService.findById(id);
 	}
 	
-	@GetMapping( "/restaurants/search?={name}" )
+	@GetMapping( "/restaurants/search" )
 	@JsonView( JsonViews.ReviewListInRestaurant.class )
-	public List<Restaurant> searchRestaurants(@PathVariable String name) {
+	public List<Restaurant> searchRestaurantsFancy(@RequestParam( value = "q", required = true ) String name) {
 		return this.restaurantService.findByNameIgnoreCaseContaining(name);
 	}
 	
@@ -109,9 +108,7 @@ public class RestRestaurantController {
 	@DeleteMapping( "/restaurant/{restaurantId}/review/{reviewId}" )
 	public void deleteReview(@PathVariable String restaurantId, @PathVariable String reviewId, HttpServletRequest request) {
 		String id = this.reviewService.findByID(reviewId).getUser().getId();
-		System.err.println("calling delete review");
 		if (isAuthenticated(request, id)) {
-			System.err.println("authenticated delete");
 			this.reviewService.deleteReviewById(reviewId);
         }
 	}
