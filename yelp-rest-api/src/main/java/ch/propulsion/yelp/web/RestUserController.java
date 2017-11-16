@@ -55,7 +55,6 @@ public class RestUserController {
 		String token = request.getHeader(tokenHeader).substring(7);
         String username = jwtUtil.getUsernameFromToken(token);
         User user = this.userService.findByUserName(username);
-        System.err.println("evaluating authentication ... id of token is " + user.getId());
         if (user.getId().equals(id)) {
         		return true;
         }
@@ -115,13 +114,10 @@ public class RestUserController {
 	public ResponseEntity<?> login(@RequestBody Map<String, String> json, Device device) {
 		String email = json.get("email");
 		String password = json.get("password");
-		System.out.println("login attempt with email: " + email);
-		System.out.println("and password: " + password);
 		// Perform the security
         final Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(email, password)
         );
-        System.out.println(authentication);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         
         // Reload password post-security so we can generate token
