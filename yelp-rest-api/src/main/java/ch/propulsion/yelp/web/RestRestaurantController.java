@@ -73,6 +73,35 @@ public class RestRestaurantController {
 		return this.restaurantService.findByNameIgnoreCaseContaining(name);
 	}
 	
+	@PostMapping( "/restaurant" )
+	@JsonView( JsonViews.ReviewListInRestaurant.class )
+	public Restaurant createRestaurant(@RequestBody Map<String, String> json) {
+		String name = json.get("name");
+		String address = json.get("address");
+		String email = json.get("email");
+		String phone = json.get("phone");
+		String logo = json.get("logo");
+		String url = json.get("url");
+		if ( name == null ) {
+			return null;
+		}
+		Restaurant restaurant = new Restaurant(name, address, email, phone, logo, url);
+		return this.restaurantService.saveRestaurant(restaurant);
+	}
+	
+	@PutMapping( "/restaurant/{id}" )
+	@JsonView( JsonViews.ReviewListInRestaurant.class )
+	public Restaurant updateRestaurant(@RequestBody Map<String, String> json, @PathVariable String id) {
+		String name = json.get("name");
+		String address = json.get("address");
+		String email = json.get("email");
+		String phone = json.get("phone");
+		String logo = json.get("logo");
+		String url = json.get("url");
+		Restaurant restaurant = new Restaurant(id, name, address, email, phone, logo, url);
+		return this.restaurantService.saveRestaurant(restaurant);
+	}
+	
 	@PostMapping( "/restaurant/{restaurantId}/review" ) 
 	@JsonView( JsonViews.ReviewDetails.class )
 	public Review postReview(@RequestBody Map<String, String> json, @PathVariable String restaurantId, HttpServletRequest request) {
@@ -114,6 +143,11 @@ public class RestRestaurantController {
 		if (isAuthenticated(request, id)) {
 			this.reviewService.deleteReviewById(reviewId);
         }
+	}
+	
+	@DeleteMapping( "/restaurant/{id}" )
+	public void deleteRestaurant(@PathVariable String id) {
+		this.restaurantService.deleteById(id);
 	}
 	
 }

@@ -101,7 +101,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			
 			.mvcMatcher("/api/restaurant/**")
 				.authorizeRequests()
-					.mvcMatchers("/api/restaurant/**").hasRole("USER")
+					.mvcMatchers(HttpMethod.POST, "/api/restaurant/*/review").hasRole("USER")
+					.mvcMatchers(HttpMethod.PUT, "/api/restaurant/*/review/*").hasRole("USER")
+					.mvcMatchers(HttpMethod.DELETE, "/api/restaurant/*/review/*").hasRole("USER")
+					.mvcMatchers(HttpMethod.POST, "/api/restaurant").hasRole("ADMIN")
+					.mvcMatchers(HttpMethod.PUT, "/api/restaurant/*").hasRole("ADMIN")
+					.mvcMatchers(HttpMethod.DELETE, "/api/restaurant/*").hasRole("ADMIN")
 					.and()
 
 			.authorizeRequests()

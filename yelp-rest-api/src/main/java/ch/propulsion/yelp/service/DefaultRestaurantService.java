@@ -41,4 +41,45 @@ public class DefaultRestaurantService implements RestaurantService {
 		return this.restaurantRepository.findByNameIgnoreCaseContaining(name);
 	}
 
+	@Override
+	public Restaurant saveRestaurant(Restaurant restaurant) {
+		return this.restaurantRepository.save(restaurant);
+	}
+
+	@Override
+	public Restaurant updateRestaurant(Restaurant restaurant) {
+		String id = restaurant.getId();
+		if (id == null) {
+			return null;
+		}
+		Restaurant restaurantFromRepo =  this.restaurantRepository.findById(id);
+		if (restaurantFromRepo == null) {
+			return null; // (name, address, email, phone, logo, url
+		}
+		if (restaurant.getName() != null) {
+			restaurantFromRepo.setName(restaurant.getName());
+		}
+		if (restaurant.getAddress() != null) {
+			restaurantFromRepo.setAddress(restaurant.getAddress());
+		}
+		if (restaurant.getEmail() != null) {
+			restaurantFromRepo.setEmail(restaurant.getEmail());
+		}
+		if (restaurant.getPhone() != null) {
+			restaurantFromRepo.setPhone(restaurant.getPhone());
+		}
+		if (restaurant.getLogo() != null) {
+			restaurantFromRepo.setLogo(restaurant.getLogo());
+		}
+		if (restaurant.getUrl() != null) {
+			restaurantFromRepo.setUrl(restaurant.getUrl());
+		}
+		return this.restaurantRepository.findById(id);
+	}
+
+	@Override
+	public void deleteById(String id) {
+		this.restaurantRepository.deleteById(id);
+	}
+
 }
