@@ -73,6 +73,14 @@ public class RestUserController {
 		return this.userService.findById(id);
 	}
 	
+	@GetMapping( "/me" )
+	@JsonView( JsonViews.ReviewListInUser.class )
+	public User getMe(HttpServletRequest request) {
+		String token = request.getHeader(tokenHeader).substring(7);
+        String username = jwtUtil.getUsernameFromToken(token);
+        return this.userService.findByUserName(username);
+	}
+	
 	@PostMapping( "/sign_up" )
 	@JsonView( JsonViews.ReviewListInUser.class )
 	public User createUser(@RequestBody Map<String, String> json) {
