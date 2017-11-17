@@ -15,10 +15,12 @@ import ch.propulsion.yelp.repository.RestaurantRepository;
 public class DefaultRestaurantService implements RestaurantService {
 	
 	private final RestaurantRepository restaurantRepository;
+	private final ReviewService reviewService;
 	
 	@Autowired
-	public DefaultRestaurantService(RestaurantRepository restaurantRepository) {
+	public DefaultRestaurantService(RestaurantRepository restaurantRepository, ReviewService reviewService) {
 		this.restaurantRepository = restaurantRepository;
+		this.reviewService = reviewService;
 	}
 	
 	@Override
@@ -54,7 +56,7 @@ public class DefaultRestaurantService implements RestaurantService {
 		}
 		Restaurant restaurantFromRepo =  this.restaurantRepository.findById(id);
 		if (restaurantFromRepo == null) {
-			return null; // (name, address, email, phone, logo, url
+			return null;
 		}
 		if (restaurant.getName() != null) {
 			restaurantFromRepo.setName(restaurant.getName());
@@ -79,6 +81,11 @@ public class DefaultRestaurantService implements RestaurantService {
 
 	@Override
 	public void deleteById(String id) {
+		Restaurant restaurant = this.restaurantRepository.findById(id);
+		while ( restaurant.getReviews().size() > 0) {
+			String review_id = restaurant.getReviews().get(0).getId();
+			this.reviewService.deleteReviewById(review_id);		
+		}
 		this.restaurantRepository.deleteById(id);
 	}
 
