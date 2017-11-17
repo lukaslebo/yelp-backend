@@ -46,8 +46,14 @@ public class DefaultReviewService implements ReviewService {
 			return null;
 		}
 		Review reviewFromRepo = this.reviewRepository.findById(id);
+		if (reviewFromRepo == null) {
+			return null;
+		}
 		if (review.getText() != null) {
 			reviewFromRepo.setText(review.getText());
+		}
+		if (review.getRating() != null) {
+			reviewFromRepo.setRating(review.getRating());
 		}
 		return this.reviewRepository.findById(id);
 	}
