@@ -54,6 +54,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
+				super.addCorsMappings(registry);
 				registry.addMapping("/**")
 					.allowedMethods("PUT", "DELETE", "GET", "POST");
 			}
