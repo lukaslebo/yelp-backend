@@ -9,4 +9,5 @@ public class YelpRestApiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(YelpRestApiApplication.class, args);
 	}
+	
 }
