@@ -74,7 +74,7 @@ public class RestRestaurantController {
 	}
 	
 	@PostMapping( "/restaurant/{restaurantId}/review" ) 
-	@JsonView( JsonViews.ReviewListInRestaurant.class )
+	@JsonView( JsonViews.ReviewDetails.class )
 	public Review postReview(@RequestBody Map<String, String> json, @PathVariable String restaurantId, HttpServletRequest request) {
 		String text = json.get("text");
 		Integer rating = Integer.parseInt(json.get("rating"));
@@ -82,12 +82,15 @@ public class RestRestaurantController {
         String username = jwtUtil.getUsernameFromToken(token);
         User user = this.userService.findByUserName(username);
 		Restaurant restaurant = this.restaurantService.findById(restaurantId);
+		if (restaurant == null) {
+			return null;
+		}
 		Review review = new Review(text, rating, user, restaurant);
 		return this.reviewService.saveReview(review);
 	}
 	
 	@PutMapping( "/restaurant/{restaurantId}/review/{reviewId}" )
-	@JsonView( JsonViews.ReviewListInRestaurant.class )
+	@JsonView( JsonViews.ReviewDetails.class )
 	public Review updateReview(@RequestBody Map<String, String> json, @PathVariable String restaurantId, @PathVariable String reviewId, HttpServletRequest request) {
 		Review reviewFromRepo = this.reviewService.findByID(reviewId);
 		String text = json.get("text");
