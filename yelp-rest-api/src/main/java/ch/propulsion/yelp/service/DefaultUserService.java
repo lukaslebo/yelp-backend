@@ -16,11 +16,13 @@ import ch.propulsion.yelp.repository.UserRepository;
 public class DefaultUserService implements UserService {
 	
 	private final UserRepository userRepository;
+	private final ReviewService reviewService;
 	private final BCryptPasswordEncoder bcrypt;
 	
 	@Autowired
-	public DefaultUserService(UserRepository userRepository, BCryptPasswordEncoder bcrypt) {
+	public DefaultUserService(UserRepository userRepository, ReviewService reviewService, BCryptPasswordEncoder bcrypt) {
 		this.userRepository = userRepository;
+		this.reviewService = reviewService;
 		this.bcrypt = bcrypt;
 	}
 	
@@ -78,6 +80,11 @@ public class DefaultUserService implements UserService {
 
 	@Override
 	public void deleteUserById(String id) {
+		User user = this.userRepository.findById(id);
+		while ( user.getReviews().size() > 0) {
+			String review_id = user.getReviews().get(0).getId();
+			this.reviewService.deleteReviewById(review_id);		
+		}
 		this.userRepository.deleteById(id);
 	}
 
